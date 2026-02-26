@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prakash Kumar — PPM Consultant</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════════ */
+:root{
+  --black:#050505;
+  --black2:#0a0a0a;
+  --black3:#111;
+  --black4:#181818;
+  --green:#00ff88;
+  --green2:#00cc6a;
+  --green3:rgba(0,255,136,.12);
+  --green4:rgba(0,255,136,.06);
+  --white:#f5f5f5;
+  --white2:#aaa;
+  --white3:#555;
+  --border:rgba(255,255,255,.07);
+  --border-g:rgba(0,255,136,.2);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:'Outfit',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+::selection{background:var(--green);color:#000;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--black);}
+::-webkit-scrollbar-thumb{background:var(--green2);}
+
+/* ═══ CURSOR ═══ */
+#c1{position:fixed;width:6px;height:6px;background:var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .08s;}
+#c2{position:fixed;width:24px;height:24px;border:1px solid rgba(0,255,136,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s;}
+.ch #c2{width:48px;height:48px;border-color:var(--green);}
+
+/* ═══ PAGES / SPA ═══ */
+.page{display:none;min-height:100vh;animation:fadeIn .5s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:800;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:var(--white);text-decoration:none;}
+.nav-logo span{color:var(--green);}
+.nav-links{display:flex;gap:0;}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.4rem .95rem;color:var(--white3);background:none;border:none;cursor:pointer;transition:all .2s;position:relative;}
+.nav-link::after{content:'';position:absolute;bottom:0;left:.95rem;right:.95rem;height:2px;background:var(--green);transform:scaleX(0);transition:transform .25s;}
+.nav-link:hover,.nav-link.on{color:var(--white);}
+.nav-link.on::after,.nav-link:hover::after{transform:scaleX(1);}
+.nav-right{display:flex;align-items:center;gap:.8rem;}
+.lang-sw{display:flex;border:1px solid var(--border-g);overflow:hidden;}
+.lb{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.28rem .65rem;background:transparent;border:none;color:var(--white3);cursor:pointer;transition:all .2s;}
+.lb.on{background:var(--green);color:#000;font-weight:700;}
+.hire-btn{font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.42rem 1.1rem;background:var(--green);color:#000;border:none;cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);transition:all .2s;}
+.hire-btn:hover{background:#fff;transform:translateY(-2px);}
+
+/* ═══════════════════════════════════════
+   PAGE 1 — HERO
+═══════════════════════════════════════ */
+.hero-page{position:relative;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
+
+/* Left hero */
+.hero-left{padding:100px 5% 60px 5%;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;}
+.hero-available{display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--green);border:1px solid var(--border-g);padding:.3rem .8rem;margin-bottom:2rem;letter-spacing:.08em;width:fit-content;}
+.hero-available::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:glow 2s infinite;}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.6);}60%{box-shadow:0 0 0 6px rgba(0,255,136,0);}}
+.hero-greeting{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--white2);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;}
+.hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,8vw,8rem);line-height:.9;letter-spacing:.02em;margin-bottom:.3rem;}
+.hero-name .green{color:var(--green);display:block;}
+.hero-role-wrap{margin-bottom:1.8rem;}
+.hero-role{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,2.8rem);color:var(--white2);letter-spacing:.05em;line-height:1.1;}
+.hero-role span{color:var(--green);}
+.hero-tagline{font-size:.95rem;font-weight:300;line-height:1.75;color:var(--white2);max-width:440px;margin-bottom:2.5rem;border-left:2px solid var(--green);padding-left:1rem;}
+.hero-stats{display:flex;gap:2.5rem;margin-bottom:2.5rem;}
+.hst{text-align:left;}
+.hst-v{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--green);line-height:1;}
+.hst-l{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--white3);letter-spacing:.08em;margin-top:.18rem;}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;}
+.hbtn1{background:var(--green);color:#000;padding:.85rem 2rem;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:all .25s;}
+.hbtn1:hover{background:#fff;transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,255,136,.3);}
+.hbtn2{background:transparent;color:var(--white);padding:.85rem 2rem;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border-g);cursor:pointer;transition:all .25s;}
+.hbtn2:hover{border-color:var(--green);color:var(--green);transform:translateY(-3px);}
+
+/* Right hero — photo */
+.hero-right{position:relative;overflow:hidden;background:var(--black2);}
+.hero-img-wrap{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;}
+.hero-img{width:100%;height:100%;object-fit:cover;object-position:top;filter:grayscale(20%) contrast(1.1);}
+.hero-img-overlay{position:absolute;inset:0;background:linear-gradient(to right,var(--black) 0%,transparent 40%),linear-gradient(to top,var(--black) 0%,transparent 30%);}
+/* Decorative circles */
+.deco-circle{position:absolute;border-radius:50%;border:1px solid var(--border-g);animation:spin linear infinite;}
+.deco-circle.c1{width:220px;height:220px;top:15%;right:8%;animation-duration:20s;}
+.deco-circle.c2{width:140px;height:140px;top:20%;right:12%;animation-duration:14s;animation-direction:reverse;}
+.deco-circle.c3{width:60px;height:60px;top:25%;right:20%;animation-duration:8s;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+/* Floating skill chips on hero */
+.hero-chip{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);border:1px solid var(--border-g);padding:.3rem .7rem;background:rgba(5,5,5,.85);backdrop-filter:blur(8px);animation:floatChip 3s ease-in-out infinite;}
+.hero-chip.a{top:22%;right:5%;animation-delay:0s;}
+.hero-chip.b{top:40%;right:2%;animation-delay:.7s;}
+.hero-chip.c{bottom:30%;right:8%;animation-delay:1.4s;}
+@keyframes floatChip{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+/* Green line accent */
+.hero-line{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),transparent);}
+
+/* ═══════════════════════════════════════
+   PAGE 2 — ABOUT / SKILLS RADAR
+═══════════════════════════════════════ */
+.about-page{padding:90px 5% 80px;min-height:100vh;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:5rem;}
+.about-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.7rem;display:flex;align-items:center;gap:.6rem;}
+.about-tag::before{content:'';width:20px;height:1px;background:var(--green);}
+.about-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);line-height:.95;letter-spacing:.02em;margin-bottom:1.5rem;}
+.about-h span{color:var(--green);}
+.about-p{font-size:.92rem;font-weight:300;line-height:1.85;color:var(--white2);margin-bottom:1.5rem;}
+.about-details{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.adet{padding:.8rem;border:1px solid var(--border);background:var(--black2);}
+.adet-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--white3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.adet-val{font-size:.82rem;font-weight:600;color:var(--white);}
+
+/* SKILLS RADAR SECTION */
+.skills-section{margin-top:0;}
+.skills-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3rem;}
+.skills-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.skill-block{background:var(--black2);border:1px solid var(--border);padding:1.5rem 1.2rem;position:relative;overflow:hidden;transition:all .3s;cursor:default;}
+.skill-block:hover{border-color:var(--border-g);transform:translateY(-4px);}
+.skill-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.skill-block:hover::before{transform:scaleX(1);}
+.sb-icon{font-size:1.6rem;margin-bottom:.8rem;display:block;}
+.sb-name{font-size:.88rem;font-weight:700;margin-bottom:.4rem;}
+.sb-level{height:2px;background:var(--black4);margin-bottom:.4rem;}
+.sb-level-fill{height:100%;background:var(--green);width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1);}
+.sb-level-fill.go{width:var(--w);}
+.sb-pct{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--green);}
+
+/* Languages */
+.lang-row{display:flex;gap:1rem;margin-top:2rem;}
+.lang-card{flex:1;background:var(--black2);border:1px solid var(--border);padding:1.2rem;display:flex;align-items:center;gap:.9rem;transition:border-color .3s;}
+.lang-card:hover{border-color:var(--border-g);}
+.lang-flag{font-size:1.4rem;}
+.lang-info{}
+.lang-name{font-size:.88rem;font-weight:700;}
+.lang-level{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--green);}
+
+/* ═══════════════════════════════════════
+   PAGE 3 — EXPERIENCE (TIMELINE)
+═══════════════════════════════════════ */
+.exp-page{padding:90px 5% 80px;min-height:100vh;}
+.timeline{position:relative;max-width:900px;margin:0 auto;}
+/* Vertical line */
+.timeline::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:1px;background:linear-gradient(var(--green),var(--border),transparent);}
+.tl-item{display:flex;gap:2.5rem;margin-bottom:3rem;position:relative;opacity:0;transform:translateX(-20px);transition:all .6s ease;}
+.tl-item.on{opacity:1;transform:translateX(0);}
+/* Dot */
+.tl-dot{width:48px;height:48px;border-radius:50%;border:2px solid var(--green);background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.9rem;color:var(--green);flex-shrink:0;position:relative;z-index:1;transition:all .3s;}
+.tl-item:hover .tl-dot{background:var(--green);color:#000;}
+/* Card */
+.tl-card{flex:1;background:var(--black2);border:1px solid var(--border);padding:1.8rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;}
+.tl-card:hover{border-color:var(--border-g);transform:translateX(6px);}
+.tl-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green);transform:scaleY(0);transform-origin:top;transition:transform .4s;}
+.tl-item:hover .tl-card::after{transform:scaleY(1);}
+.tl-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem;flex-wrap:wrap;gap:.5rem;}
+.tl-role{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.03em;line-height:1;color:var(--white);}
+.tl-date{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);border:1px solid var(--border-g);padding:.22rem .6rem;white-space:nowrap;}
+.tl-co{font-size:.82rem;font-weight:600;color:var(--green);margin-bottom:.2rem;}
+.tl-loc{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--white3);margin-bottom:1.1rem;}
+.tl-pts{list-style:none;display:flex;flex-direction:column;gap:.48rem;}
+.tl-pts li{font-size:.82rem;font-weight:300;line-height:1.65;color:var(--white2);padding-left:1.1rem;position:relative;}
+.tl-pts li::before{content:'▸';position:absolute;left:0;color:var(--green);font-size:.7rem;}
+.tl-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--border);}
+.tl-tag{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--green);border:1px solid var(--border-g);padding:.14rem .48rem;background:var(--green4);}
+/* Current badge */
+.tl-current{position:absolute;top:1.2rem;right:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.52rem;background:var(--green);color:#000;padding:.16rem .5rem;font-weight:700;letter-spacing:.06em;}
+
+/* ═══════════════════════════════════════
+   PAGE 4 — PROJECTS
+═══════════════════════════════════════ */
+.proj-page{padding:90px 5% 80px;min-height:100vh;}
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.pcard{background:var(--black2);border:1px solid var(--border);padding:2rem;position:relative;overflow:hidden;transition:all .3s;cursor:pointer;}
+.pcard:hover{border-color:var(--border-g);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,255,136,.08);}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);}
+.pcard-glow{position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(0,255,136,.06),transparent 65%);opacity:0;transition:opacity .4s;}
+.pcard:hover .pcard-glow{opacity:1;}
+.pcard-num{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:rgba(0,255,136,.08);line-height:1;margin-bottom:.6rem;}
+.pcard-title{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.03em;line-height:1.2;margin-bottom:.5rem;}
+.pcard-sub{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--white3);margin-bottom:.9rem;}
+.pcard-desc{font-size:.8rem;font-weight:300;line-height:1.7;color:var(--white2);}
+.pcard-tag{display:inline-block;margin-top:.9rem;font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--green);border:1px solid var(--border-g);padding:.15rem .5rem;background:var(--green4);}
+
+/* ═══════════════════════════════════════
+   PAGE 5 — BOOK A MEETING (CHAT)
+═══════════════════════════════════════ */
+.chat-page{padding:90px 5% 80px;min-height:100vh;display:grid;grid-template-columns:1fr 1.3fr;gap:4rem;align-items:start;}
+.chat-left{}
+.chat-left-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.7rem;display:flex;align-items:center;gap:.6rem;}
+.chat-left-eyebrow::before{content:'';width:20px;height:1px;background:var(--green);}
+.chat-left-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,4vw,4rem);line-height:.95;margin-bottom:1.2rem;}
+.chat-left-h span{color:var(--green);}
+.chat-left-p{font-size:.9rem;font-weight:300;line-height:1.8;color:var(--white2);margin-bottom:2rem;}
+.chat-features{display:flex;flex-direction:column;gap:.8rem;margin-bottom:2.5rem;}
+.cf{display:flex;align-items:center;gap:.9rem;font-size:.85rem;color:var(--white2);}
+.cf-icon{width:34px;height:34px;border:1px solid var(--border-g);background:var(--green4);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.contact-quick{display:flex;flex-direction:column;gap:.6rem;}
+.cq{display:flex;align-items:center;gap:.7rem;font-size:.82rem;color:var(--white2);text-decoration:none;transition:color .2s;}
+.cq:hover{color:var(--green);}
+.cq-ico{font-size:.9rem;}
+
+/* Chat window */
+.chat-window{background:var(--black2);border:1px solid var(--border);border-top:2px solid var(--green);position:sticky;top:80px;}
+.cw-bar{padding:.7rem 1.3rem;background:var(--black3);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.cw-bar-left{display:flex;align-items:center;gap:.6rem;}
+.cw-dots span{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;}
+.cw-dots .d1{background:#ff5f57;}.cw-dots .d2{background:#febc2e;}.cw-dots .d3{background:#28c840;}
+.cw-title{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--white3);}
+.cw-status{display:flex;align-items:center;gap:.35rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--green);}
+.cw-dot{width:4px;height:4px;border-radius:50%;background:var(--green);animation:glow 2s infinite;}
+.msgs{padding:1.2rem;min-height:300px;max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:.8rem;}
+.msgs::-webkit-scrollbar{width:2px;}
+.msgs::-webkit-scrollbar-thumb{background:var(--border-g);}
+.cmsg{display:flex;gap:.65rem;align-items:flex-start;}
+.cmsg.user{flex-direction:row-reverse;}
+.cav{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:700;flex-shrink:0;}
+.cmsg.ai .cav{background:var(--green4);border:1px solid var(--border-g);color:var(--green);}
+.cmsg.user .cav{background:var(--black3);border:1px solid var(--border);color:var(--white3);}
+.cbubble{max-width:84%;padding:.78rem 1rem;font-size:.8rem;line-height:1.65;}
+.cmsg.ai .cbubble{background:var(--black3);border:1px solid var(--border);color:var(--white);border-radius:0 6px 6px 6px;}
+.cmsg.user .cbubble{background:var(--green4);border:1px solid var(--border-g);color:var(--white);border-radius:6px 0 6px 6px;}
+.ctime{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--white3);margin-top:.22rem;}
+.typing-wrap{display:flex;gap:4px;padding:3px 0;}
+.typing-wrap span{width:5px;height:5px;border-radius:50%;background:var(--green);opacity:.3;animation:td 1.1s infinite;}
+.typing-wrap span:nth-child(2){animation-delay:.18s;}
+.typing-wrap span:nth-child(3){animation-delay:.36s;}
+@keyframes td{0%,80%,100%{opacity:.3;transform:scale(.9)}40%{opacity:1;transform:scale(1.15)}}
+.qr-wrap{padding:.65rem 1.3rem;border-top:1px solid var(--border);display:flex;gap:.4rem;flex-wrap:wrap;}
+.qr{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--white3);border:1px solid var(--border);padding:.22rem .62rem;cursor:pointer;background:none;transition:all .2s;}
+.qr:hover{border-color:var(--border-g);color:var(--green);}
+.ci-wrap{display:flex;border-top:1px solid var(--border);}
+.ci{flex:1;background:transparent;border:none;outline:none;padding:.85rem 1.2rem;font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--white);}
+.ci::placeholder{color:var(--white3);}
+.cs{background:var(--green);border:none;cursor:pointer;padding:0 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:#000;text-transform:uppercase;letter-spacing:.08em;font-weight:700;transition:background .2s;}
+.cs:hover{background:#fff;}
+.cs:disabled{opacity:.4;cursor:not-allowed;}
+.cw-footer{text-align:right;padding:.4rem 1.3rem;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--white3);border-top:1px solid var(--border);}
+
+/* ═══ SECTION HEADERS (shared) ═══ */
+.sh{margin-bottom:3.5rem;}
+.sh-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--green);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.6rem;display:flex;align-items:center;gap:.6rem;}
+.sh-tag::before{content:'';width:20px;height:1px;background:var(--green);}
+.sh-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);line-height:.95;letter-spacing:.02em;}
+.sh-h span{color:var(--green);}
+
+/* ═══ PAGE TRANSITION INDICATOR ═══ */
+.page-dots{position:fixed;right:2%;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.6rem;z-index:700;}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--white3);cursor:pointer;transition:all .25s;}
+.pdot:hover,.pdot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
+
+/* ═══ FOOTER ═══ */
+.footer{background:var(--black2);border-top:1px solid var(--border);text-align:center;padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--white3);}
+.footer span{color:var(--green);}
+
+/* ═══ MOBILE ═══ */
+@media(max-width:900px){
+  .hero-page{grid-template-columns:1fr;}.hero-right{display:none;}
+  .about-grid{grid-template-columns:1fr;}.skills-grid{grid-template-columns:repeat(2,1fr);}
+  .proj-grid{grid-template-columns:1fr;}.chat-page{grid-template-columns:1fr;}
+  .nav-links{display:none;}.page-dots{display:none;}
+  .lang-row{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="c1"></div><div id="c2"></div>
+
+<!-- PAGE DOTS -->
+<div class="page-dots" id="page-dots">
+  <div class="pdot on" onclick="goPage(0)" title="Home"></div>
+  <div class="pdot" onclick="goPage(1)" title="About"></div>
+  <div class="pdot" onclick="goPage(2)" title="Experience"></div>
+  <div class="pdot" onclick="goPage(3)" title="Projects"></div>
+  <div class="pdot" onclick="goPage(4)" title="Contact"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo" onclick="goPage(0);return false;">PK<span>.</span></a>
+  <div class="nav-links" id="nav-links">
+    <button class="nav-link on" onclick="goPage(0)" data-en="Home" data-de="Start">Home</button>
+    <button class="nav-link" onclick="goPage(1)" data-en="About" data-de="Über mich">About</button>
+    <button class="nav-link" onclick="goPage(2)" data-en="Experience" data-de="Erfahrung">Experience</button>
+    <button class="nav-link" onclick="goPage(3)" data-en="Projects" data-de="Projekte">Projects</button>
+    <button class="nav-link" onclick="goPage(4)" data-en="Contact" data-de="Kontakt">Contact</button>
+  </div>
+  <div class="nav-right">
+    <div class="lang-sw"><button class="lb on" id="lb-en" onclick="setLang('en')">EN</button><button class="lb" id="lb-de" onclick="setLang('de')">DE</button></div>
+    <button class="hire-btn" onclick="goPage(4)" data-en="Hire Me" data-de="Kontakt">Hire Me</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     PAGE 0 — HERO
+══════════════════════════════════ -->
+<div class="page active" id="p0">
+  <section class="hero-page">
+    <div class="hero-left">
+      <div class="hero-available">
+        <span data-en="Available for new opportunities" data-de="Offen für neue Möglichkeiten">Available for new opportunities</span>
+      </div>
+      <p class="hero-greeting" data-en="Hi, I'm" data-de="Hallo, ich bin">Hi, I'm</p>
+      <h1 class="hero-name">PRAKASH<span class="green">KUMAR</span></h1>
+      <div class="hero-role-wrap">
+        <p class="hero-role"><span data-en="PPM Consultant" data-de="PPM-Berater">PPM Consultant</span></p>
+        <p class="hero-role" style="font-size:clamp(1rem,2vw,1.8rem);color:var(--white3);" data-en="Digital Transformation · Sciforma Expert" data-de="Digitale Transformation · Sciforma-Experte">Digital Transformation · Sciforma Expert</p>
+      </div>
+      <p class="hero-tagline" data-en="Project and Portfolio Management professional with international experience across Germany and Luxembourg. I make enterprise software work for people — not against them." data-de="PPM-Profi mit internationaler Erfahrung in Deutschland und Luxemburg. Ich bringe Unternehmenssoftware dazu, für Menschen zu arbeiten.">Project and Portfolio Management professional with international experience across Germany and Luxembourg. I make enterprise software work for people — not against them.</p>
+      <div class="hero-stats">
+        <div class="hst"><div class="hst-v">4+</div><div class="hst-l" data-en="Years Exp." data-de="Jahre Erf.">Years Exp.</div></div>
+        <div class="hst"><div class="hst-v">6</div><div class="hst-l" data-en="Companies" data-de="Unternehmen">Companies</div></div>
+        <div class="hst"><div class="hst-v">1.9</div><div class="hst-l" data-en="Master GPA" data-de="Master Note">Master GPA</div></div>
+      </div>
+      <div class="hero-btns">
+        <button class="hbtn1" onclick="goPage(4)" data-en="Book a Meeting →" data-de="Termin buchen →">Book a Meeting →</button>
+        <button class="hbtn2" onclick="goPage(2)" data-en="View Experience" data-de="Erfahrung ansehen">View Experience</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- REPLACE src with your photo -->
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&fit=crop&crop=face" alt="Prakash Kumar" class="hero-img" id="hero-img" onerror="this.style.display='none'"/>
+      <div class="hero-img-overlay"></div>
+      <div class="deco-circle c1"></div>
+      <div class="deco-circle c2"></div>
+      <div class="deco-circle c3"></div>
+      <div class="hero-chip a">Sciforma PPM</div>
+      <div class="hero-chip b">Power BI</div>
+      <div class="hero-chip c">SAP · ServiceNow</div>
+      <div class="hero-line"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 1 — ABOUT + SKILLS
+══════════════════════════════════ -->
+<div class="page" id="p1">
+  <section class="about-page">
+    <div class="about-grid">
+      <div>
+        <p class="about-tag" data-en="who I am" data-de="wer ich bin">who I am</p>
+        <h2 class="about-h" data-en="About <span>Me</span>" data-de="Über <span>Mich</span>">About <span>Me</span></h2>
+        <p class="about-p" data-en="PPM professional currently supporting enterprise operations at POST Luxembourg through Tech Mahindra. My work sits at the intersection of enterprise software, project governance, and digital transformation — making complex systems accessible and effective." data-de="PPM-Profi, der derzeit Enterprise-Operationen bei POST Luxembourg über Tech Mahindra unterstützt. Meine Arbeit liegt an der Schnittstelle von Enterprise-Software, Projektgovernance und digitaler Transformation.">PPM professional currently supporting enterprise operations at POST Luxembourg through Tech Mahindra. My work sits at the intersection of enterprise software, project governance, and digital transformation — making complex systems accessible and effective.</p>
+        <p class="about-p" data-en="From Sciforma administration and SAP/ServiceNow integrations to training project managers and maintaining governance frameworks — I thrive where technology meets people." data-de="Von der Sciforma-Administration und SAP/ServiceNow-Integrationen bis hin zur Schulung von Projektmanagern und der Pflege von Governance-Frameworks — ich gedeihe dort, wo Technologie auf Menschen trifft.">From Sciforma administration and SAP/ServiceNow integrations to training project managers and maintaining governance frameworks — I thrive where technology meets people.</p>
+        <div class="about-details">
+          <div class="adet"><div class="adet-label" data-en="Location" data-de="Standort">Location</div><div class="adet-val">Luxembourg / Germany</div></div>
+          <div class="adet"><div class="adet-label" data-en="Current Role" data-de="Aktuelle Rolle">Current Role</div><div class="adet-val" data-en="Software Engineer (PPM)" data-de="Software Engineer (PPM)">Software Engineer (PPM)</div></div>
+          <div class="adet"><div class="adet-label">Email</div><div class="adet-val" style="font-size:.72rem;">prakashjsr13@gmail.com</div></div>
+          <div class="adet"><div class="adet-label">LinkedIn</div><div class="adet-val" style="font-size:.72rem;">in/prakashjsr</div></div>
+        </div>
+      </div>
+      <div>
+        <!-- Skill Hexagon Grid Visual -->
+        <div style="text-align:center;">
+          <canvas id="skill-canvas" width="400" height="380" style="max-width:100%;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILL BLOCKS -->
+    <div class="sh">
+      <p class="sh-tag" data-en="what I use daily" data-de="Was ich täglich nutze">what I use daily</p>
+      <h2 class="sh-h" data-en="Core <span>Skills</span>" data-de="Kern-<span>Fähigkeiten</span>">Core <span>Skills</span></h2>
+    </div>
+    <div class="skills-grid" id="skills-grid">
+      <div class="skill-block"><span class="sb-icon">🗂️</span><div class="sb-name">Sciforma PPM</div><div class="sb-level"><div class="sb-level-fill" style="--w:95%"></div></div><div class="sb-pct">95% — Expert</div></div>
+      <div class="skill-block"><span class="sb-icon">📊</span><div class="sb-name">Power BI</div><div class="sb-level"><div class="sb-level-fill" style="--w:85%"></div></div><div class="sb-pct">85% — Advanced</div></div>
+      <div class="skill-block"><span class="sb-icon">⚙️</span><div class="sb-name">SAP</div><div class="sb-level"><div class="sb-level-fill" style="--w:78%"></div></div><div class="sb-pct">78% — Proficient</div></div>
+      <div class="skill-block"><span class="sb-icon">🔧</span><div class="sb-name">ServiceNow</div><div class="sb-level"><div class="sb-level-fill" style="--w:75%"></div></div><div class="sb-pct">75% — Proficient</div></div>
+      <div class="skill-block"><span class="sb-icon">⚡</span><div class="sb-name">JIRA</div><div class="sb-level"><div class="sb-level-fill" style="--w:90%"></div></div><div class="sb-pct">90% — Expert</div></div>
+      <div class="skill-block"><span class="sb-icon">🔄</span><div class="sb-name">Agile / Scrum</div><div class="sb-level"><div class="sb-level-fill" style="--w:88%"></div></div><div class="sb-pct">88% — Advanced</div></div>
+      <div class="skill-block"><span class="sb-icon">📈</span><div class="sb-name" data-en="Project Governance" data-de="Projektgovernance">Project Governance</div><div class="sb-level"><div class="sb-level-fill" style="--w:92%"></div></div><div class="sb-pct">92% — Expert</div></div>
+      <div class="skill-block"><span class="sb-icon">🗺️</span><div class="sb-name">Zoho Projects</div><div class="sb-level"><div class="sb-level-fill" style="--w:82%"></div></div><div class="sb-pct">82% — Advanced</div></div>
+    </div>
+    <div class="lang-row">
+      <div class="lang-card"><div class="lang-flag">🇬🇧</div><div class="lang-info"><div class="lang-name">English</div><div class="lang-level" data-en="Fluent / Native" data-de="Fließend / Muttersprache">Fluent / Native</div></div></div>
+      <div class="lang-card"><div class="lang-flag">🇩🇪</div><div class="lang-info"><div class="lang-name">German</div><div class="lang-level">B1</div></div></div>
+      <div class="lang-card"><div class="lang-flag">🇮🇳</div><div class="lang-info"><div class="lang-name">Hindi</div><div class="lang-level" data-en="Native" data-de="Muttersprache">Native</div></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 2 — EXPERIENCE
+══════════════════════════════════ -->
+<div class="page" id="p2">
+  <section class="exp-page">
+    <div class="sh">
+      <p class="sh-tag" data-en="career path" data-de="Karriereweg">career path</p>
+      <h2 class="sh-h" data-en="Work <span>Experience</span>" data-de="Berufliche <span>Erfahrung</span>">Work <span>Experience</span></h2>
+    </div>
+    <div class="timeline" id="timeline">
+
+      <div class="tl-item" id="tl0">
+        <div class="tl-dot">01</div>
+        <div class="tl-card">
+          <span class="tl-current" data-en="CURRENT" data-de="AKTUELL">CURRENT</span>
+          <div class="tl-top">
+            <div class="tl-role" data-en="Software Engineer — PPM" data-de="Software Engineer — PPM">Software Engineer — PPM</div>
+            <div class="tl-date" data-en="Feb 2026 – Present" data-de="Feb. 2026 – Heute">Feb 2026 – Present</div>
+          </div>
+          <div class="tl-co">Tech Mahindra <span style="color:var(--white3);font-weight:400;" data-en="(Client: POST Luxembourg)" data-de="(Kunde: POST Luxembourg)">(Client: POST Luxembourg)</span></div>
+          <div class="tl-loc">Luxembourg</div>
+          <ul class="tl-pts">
+            <li data-en="Manage and support the corporate PPM platform (Sciforma) — user access, configuration, functional enhancements" data-de="Verwaltung und Unterstützung der Corporate-PPM-Plattform (Sciforma) — Benutzerzugang, Konfiguration, funktionale Erweiterungen">Manage and support the corporate PPM platform (Sciforma) — user access, configuration, functional enhancements</li>
+            <li data-en="Drive integration between SAP, ServiceNow, and Sciforma for end-to-end project visibility" data-de="Vorantreiben der Integration zwischen SAP, ServiceNow und Sciforma für durchgängige Projekttransparenz">Drive integration between SAP, ServiceNow, and Sciforma for end-to-end project visibility</li>
+            <li data-en="Maintain governance structures: phases, gates, baselines, and executive dashboards" data-de="Pflege von Governance-Strukturen: Phasen, Gates, Baselines und Executive-Dashboards">Maintain governance structures: phases, gates, baselines, and executive dashboards</li>
+            <li data-en="Conduct training for project and resource managers across business units" data-de="Schulungen für Projekt- und Ressourcenmanager in allen Geschäftsbereichen">Conduct training for project and resource managers across business units</li>
+            <li data-en="Resolve incidents and coordinate vendor collaboration for platform improvements" data-de="Lösung von Vorfällen und Koordination der Anbieterzusammenarbeit für Plattformverbesserungen">Resolve incidents and coordinate vendor collaboration for platform improvements</li>
+          </ul>
+          <div class="tl-tags"><span class="tl-tag">Sciforma</span><span class="tl-tag">SAP</span><span class="tl-tag">ServiceNow</span><span class="tl-tag">PPM</span><span class="tl-tag">Governance</span><span class="tl-tag">Training</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item" id="tl1">
+        <div class="tl-dot">02</div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <div class="tl-role" data-en="Stock Coordinator" data-de="Bestandskoordinator">Stock Coordinator</div>
+            <div class="tl-date" data-en="Jun 2025 – Present" data-de="Jun. 2025 – Heute">Jun 2025 – Present</div>
+          </div>
+          <div class="tl-co">PVH Brands Germany GmbH</div>
+          <div class="tl-loc">Germany</div>
+          <ul class="tl-pts">
+            <li data-en="Inventory coordination and operational reporting with cross-functional teams" data-de="Bestandskoordination und operatives Reporting mit funktionsübergreifenden Teams">Inventory coordination and operational reporting with cross-functional teams</li>
+            <li data-en="KPI tracking and reporting transparency for process efficiency" data-de="KPI-Tracking und Berichtstransparenz für Prozesseffizienz">KPI tracking and reporting transparency for process efficiency</li>
+          </ul>
+          <div class="tl-tags"><span class="tl-tag">KPI Tracking</span><span class="tl-tag">Reporting</span><span class="tl-tag">Operations</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item" id="tl2">
+        <div class="tl-dot">03</div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <div class="tl-role" data-en="Working Student — Project Mgmt" data-de="Werkstudent — Projektmanagement">Working Student — Project Mgmt</div>
+            <div class="tl-date" data-en="Jun 2024 – Mar 2025" data-de="Jun. 2024 – Mär. 2025">Jun 2024 – Mar 2025</div>
+          </div>
+          <div class="tl-co">Korian Deutschland GmbH</div>
+          <div class="tl-loc">Germany</div>
+          <ul class="tl-pts">
+            <li data-en="Supported IT and operational healthcare projects from requirements to delivery" data-de="Unterstützung von IT- und operativen Gesundheitsprojekten von Anforderungen bis zur Lieferung">Supported IT and operational healthcare projects from requirements to delivery</li>
+            <li data-en="Governance reporting and structured cross-functional coordination" data-de="Governance-Reporting und strukturierte funktionsübergreifende Koordination">Governance reporting and structured cross-functional coordination</li>
+          </ul>
+          <div class="tl-tags"><span class="tl-tag">Healthcare IT</span><span class="tl-tag">Governance</span><span class="tl-tag">Documentation</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item" id="tl3">
+        <div class="tl-dot">04</div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <div class="tl-role" data-en="Working Student — Project Engineer" data-de="Werkstudent — Projektingenieur">Working Student — Project Engineer</div>
+            <div class="tl-date" data-en="Mar 2023 – Feb 2024" data-de="Mär. 2023 – Feb. 2024">Mar 2023 – Feb 2024</div>
+          </div>
+          <div class="tl-co">Metriklab Engineering & Automation GmbH</div>
+          <div class="tl-loc">Germany</div>
+          <ul class="tl-pts">
+            <li data-en="Led Zoho CRM and Zoho Projects implementation from scratch" data-de="Leitete Zoho CRM und Zoho Projects Implementierung von Grund auf">Led Zoho CRM and Zoho Projects implementation from scratch</li>
+            <li data-en="Facilitated Agile ceremonies, sprint coordination, and KPI dashboards" data-de="Führte Agile-Zeremonien, Sprint-Koordination und KPI-Dashboards durch">Facilitated Agile ceremonies, sprint coordination, and KPI dashboards</li>
+          </ul>
+          <div class="tl-tags"><span class="tl-tag">Zoho Projects</span><span class="tl-tag">Agile</span><span class="tl-tag">KPI Dashboards</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item" id="tl4">
+        <div class="tl-dot">05</div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <div class="tl-role" data-en="Associate Analyst" data-de="Associate Analyst">Associate Analyst</div>
+            <div class="tl-date" data-en="Jun 2022 – Oct 2022" data-de="Jun. 2022 – Okt. 2022">Jun 2022 – Oct 2022</div>
+          </div>
+          <div class="tl-co">Lowe's India Pvt Ltd</div>
+          <div class="tl-loc">India</div>
+          <ul class="tl-pts">
+            <li data-en="Agile-based IT initiative support with KPI dashboards and business monitoring" data-de="Unterstützung agiler IT-Initiativen mit KPI-Dashboards und Business-Monitoring">Agile-based IT initiative support with KPI dashboards and business monitoring</li>
+          </ul>
+          <div class="tl-tags"><span class="tl-tag">Agile</span><span class="tl-tag">KPI</span><span class="tl-tag">IT Projects</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item" id="tl5">
+        <div class="tl-dot">06</div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <div class="tl-role" data-en="Project Coordinator" data-de="Projektkoordinator">Project Coordinator</div>
+            <div class="tl-date" data-en="Aug 2021 – Jun 2022" data-de="Aug. 2021 – Jun. 2022">Aug 2021 – Jun 2022</div>
+          </div>
+          <div class="tl-co">IQVIA RDS (India) Private Limited</div>
+          <div class="tl-loc">India</div>
+          <ul class="tl-pts">
+            <li data-en="Healthcare project delivery in a compliance-driven environment with rigorous documentation standards" data-de="Lieferung von Gesundheitsprojekten in einem compliance-orientierten Umfeld">Healthcare project delivery in a compliance-driven environment with rigorous documentation standards</li>
+          </ul>
+          <div class="tl-tags"><span class="tl-tag">Healthcare</span><span class="tl-tag">Compliance</span><span class="tl-tag">Coordination</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 3 — PROJECTS / EDUCATION
+══════════════════════════════════ -->
+<div class="page" id="p3">
+  <section class="proj-page">
+    <div class="sh">
+      <p class="sh-tag" data-en="key highlights" data-de="Highlights">key highlights</p>
+      <h2 class="sh-h" data-en="Projects & <span>Education</span>" data-de="Projekte & <span>Bildung</span>">Projects & <span>Education</span></h2>
+    </div>
+    <div class="proj-grid" style="margin-bottom:3rem;">
+      <div class="pcard">
+        <div class="pcard-glow"></div>
+        <div class="pcard-num">01</div>
+        <div class="pcard-title" data-en="Sciforma Enterprise Rollout" data-de="Sciforma Enterprise-Rollout">Sciforma Enterprise Rollout</div>
+        <div class="pcard-sub" data-en="POST Luxembourg via Tech Mahindra · 2026" data-de="POST Luxembourg via Tech Mahindra · 2026">POST Luxembourg via Tech Mahindra · 2026</div>
+        <div class="pcard-desc" data-en="Ongoing administration of the corporate PPM platform for a national telecom operator. Covers governance configuration, SAP integration, stakeholder training and continuous improvement." data-de="Laufende Administration der Corporate-PPM-Plattform für einen nationalen Telekommunikationsbetreiber. Beinhaltet Governance-Konfiguration, SAP-Integration, Stakeholder-Schulungen.">Ongoing administration of the corporate PPM platform for a national telecom operator. Covers governance configuration, SAP integration, stakeholder training and continuous improvement.</div>
+        <span class="pcard-tag">SCIFORMA · PPM · ENTERPRISE</span>
+      </div>
+      <div class="pcard">
+        <div class="pcard-glow"></div>
+        <div class="pcard-num">02</div>
+        <div class="pcard-title" data-en="Master Thesis: Sciforma Implementation" data-de="Masterarbeit: Sciforma-Implementierung">Master Thesis: Sciforma Implementation</div>
+        <div class="pcard-sub" data-en="THI / Korian Deutschland · 2025 · Grade 1.7" data-de="THI / Korian Deutschland · 2025 · Note 1,7">THI / Korian Deutschland · 2025 · Grade 1.7</div>
+        <div class="pcard-desc" data-en="Designed and led the rollout strategy for a company-wide PPM tool deployment. Created process documentation, trained 40+ users, and delivered an executive management dashboard." data-de="Entwarf und leitete die Rollout-Strategie für eine unternehmensweite PPM-Tool-Einführung. Prozessdokumentation, Schulung von 40+ Nutzern, Executive-Management-Dashboard.">Designed and led the rollout strategy for a company-wide PPM tool deployment. Created process documentation, trained 40+ users, and delivered an executive management dashboard.</div>
+        <span class="pcard-tag">SCIFORMA · RESEARCH · GRADE 1.7</span>
+      </div>
+      <div class="pcard">
+        <div class="pcard-glow"></div>
+        <div class="pcard-num">03</div>
+        <div class="pcard-title" data-en="Zoho CRM & Projects Implementation" data-de="Zoho CRM & Projects Implementierung">Zoho CRM & Projects Implementation</div>
+        <div class="pcard-sub" data-en="Metriklab Engineering · 2023–2024" data-de="Metriklab Engineering · 2023–2024">Metriklab Engineering · 2023–2024</div>
+        <div class="pcard-desc" data-en="End-to-end implementation of Zoho CRM and Zoho Projects for an engineering automation firm. Ran Agile ceremonies, built KPI dashboards, and coordinated cross-functional IT rollout." data-de="End-to-End-Implementierung von Zoho CRM und Zoho Projects für ein Engineering-Unternehmen. Agile-Zeremonien, KPI-Dashboards, IT-Rollout-Koordination.">End-to-end implementation of Zoho CRM and Zoho Projects. Ran Agile ceremonies, built KPI dashboards, and coordinated cross-functional IT rollout.</div>
+        <span class="pcard-tag">ZOHO · AGILE · IMPLEMENTATION</span>
+      </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="sh" style="margin-bottom:2rem;">
+      <p class="sh-tag" data-en="academic background" data-de="Akademischer Hintergrund">academic background</p>
+      <h2 class="sh-h" style="font-size:clamp(2rem,4vw,3.5rem);" data-en="<span>Education</span>" data-de="<span>Bildung</span>"><span>Education</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="pcard" style="cursor:default;">
+        <div class="pcard-glow"></div>
+        <div style="font-size:2rem;margin-bottom:.8rem;">🎓</div>
+        <div class="pcard-title" data-en="Master — Design Leadership" data-de="Master — Design Leadership">Master — Design Leadership</div>
+        <div class="pcard-sub">Technische Hochschule Ingolstadt, Germany</div>
+        <div class="pcard-desc" data-en="Strategy · Digital Transformation · Business Analysis · Change Management · Agile" data-de="Strategie · Digitale Transformation · Business Analyse · Change Management · Agile">Strategy · Digital Transformation · Business Analysis · Change Management · Agile</div>
+        <span class="pcard-tag" data-en="GPA: 1.9 — EXCELLENT" data-de="Note: 1,9 — SEHR GUT">GPA: 1.9 — EXCELLENT</span>
+      </div>
+      <div class="pcard" style="cursor:default;">
+        <div class="pcard-glow"></div>
+        <div style="font-size:2rem;margin-bottom:.8rem;">⚙️</div>
+        <div class="pcard-title" data-en="Diploma — Mechanical Engineering" data-de="Diplom — Maschinenbau">Diploma — Mechanical Engineering</div>
+        <div class="pcard-sub" data-en="India" data-de="Indien">India</div>
+        <div class="pcard-desc" data-en="Engineering foundations that bridge technical systems with business and digital transformation." data-de="Ingenieurgrundlagen als Brücke zwischen technischen Systemen und digitaler Transformation.">Engineering foundations that bridge technical systems with business and digital transformation.</div>
+        <span class="pcard-tag" data-en="ENGINEERING · SYSTEMS THINKING" data-de="INGENIEURWESEN · SYSTEMDENKEN">ENGINEERING · SYSTEMS THINKING</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 4 — CONTACT / CHAT
+══════════════════════════════════ -->
+<div class="page" id="p4">
+  <section class="chat-page">
+    <div class="chat-left">
+      <p class="chat-left-eyebrow" data-en="book a meeting" data-de="Termin buchen">book a meeting</p>
+      <h2 class="chat-left-h" data-en="Don't fill<br>a form.<br><span>Just chat.</span>" data-de="Kein<br>Formular.<br><span>Einfach chatten.</span>">Don't fill<br>a form.<br><span>Just chat.</span></h2>
+      <p class="chat-left-p" data-en="My AI assistant knows my full background and can book a meeting directly through conversation. Ask anything — from Sciforma experience to availability." data-de="Mein KI-Assistent kennt meinen gesamten Hintergrund und kann direkt durch Gespräch einen Termin buchen. Stellen Sie beliebige Fragen.">My AI assistant knows my full background and can book a meeting directly through conversation. Ask anything — from Sciforma experience to availability.</p>
+      <div class="chat-features">
+        <div class="cf"><div class="cf-icon">🤖</div><span data-en="Answers any question about Prakash" data-de="Beantwortet jede Frage über Prakash">Answers any question about Prakash</span></div>
+        <div class="cf"><div class="cf-icon">📅</div><span data-en="Books meetings through natural conversation" data-de="Bucht Meetings durch natürliches Gespräch">Books meetings through natural conversation</span></div>
+        <div class="cf"><div class="cf-icon">🌐</div><span data-en="Works in English and German" data-de="Funktioniert auf Englisch und Deutsch">Works in English and German</span></div>
+        <div class="cf"><div class="cf-icon">⚡</div><span data-en="Responds instantly" data-de="Antwortet sofort">Responds instantly</span></div>
+      </div>
+      <div class="contact-quick">
+        <a class="cq" href="mailto:prakashjsr13@gmail.com"><span class="cq-ico">✉️</span>prakashjsr13@gmail.com</a>
+        <a class="cq" href="tel:+491791169590"><span class="cq-ico">📞</span>(+49) 179 1169590</a>
+        <a class="cq" href="https://linkedin.com/in/prakashjsr" target="_blank"><span class="cq-ico">💼</span>linkedin.com/in/prakashjsr</a>
+        <a class="cq"><span class="cq-ico">📍</span>Luxembourg / Ingolstadt, Germany</a>
+      </div>
+    </div>
+    <div>
+      <div class="chat-window">
+        <div class="cw-bar">
+          <div class="cw-bar-left"><div class="cw-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><span class="cw-title" data-en="Prakash's Assistant — PPM Consultant" data-de="Prakashs Assistent — PPM-Berater">Prakash's Assistant — PPM Consultant</span></div>
+          <div class="cw-status"><span class="cw-dot"></span><span data-en="online" data-de="online">online</span></div>
+        </div>
+        <div class="msgs" id="msgs">
+          <div class="cmsg ai">
+            <div class="cav">PK</div>
+            <div>
+              <div class="cbubble" data-en="Hey! 👋 I'm Prakash's assistant. Ask me about his Sciforma expertise, PPM experience, or just say 'book a meeting' and I'll set it up for you." data-de="Hey! 👋 Ich bin Prakashs Assistent. Fragen Sie nach seiner Sciforma-Expertise, PPM-Erfahrung, oder sagen Sie 'Termin buchen'.">Hey! 👋 I'm Prakash's assistant. Ask me about his Sciforma expertise, PPM experience, or just say "book a meeting" and I'll set it up for you.</div>
+              <div class="ctime">just now</div>
+            </div>
+          </div>
+        </div>
+        <div class="qr-wrap" id="qr-wrap">
+          <button class="qr" onclick="useQR(this)" data-en="Book a meeting" data-de="Termin buchen">Book a meeting</button>
+          <button class="qr" onclick="useQR(this)" data-en="Sciforma experience?" data-de="Sciforma-Erfahrung?">Sciforma experience?</button>
+          <button class="qr" onclick="useQR(this)" data-en="Why hire Prakash?" data-de="Warum Prakash einstellen?">Why hire Prakash?</button>
+          <button class="qr" onclick="useQR(this)" data-en="Current role?" data-de="Aktuelle Rolle?">Current role?</button>
+        </div>
+        <div class="ci-wrap">
+          <input class="ci" id="ci" type="text" data-placeholder-en="Ask anything or say 'book a meeting'…" data-placeholder-de="Fragen oder 'Termin buchen' schreiben…" placeholder="Ask anything or say 'book a meeting'…"/>
+          <button class="cs" id="cs" onclick="sendMsg()" data-en="Send" data-de="Senden">Send</button>
+        </div>
+        <div class="cw-footer" data-en="Personal AI · Based on verified profile data" data-de="Persönliche KI · Basierend auf verifizierten Profildaten">Personal AI · Based on verified profile data</div>
+      </div>
+    </div>
+  </section>
+  <div class="footer"><span>Prakash Kumar</span> · PPM Consultant · Luxembourg / Germany · 2026</div>
+</div>
+
+<script>
+/* ═══ CURSOR ═══ */
+const c1=document.getElementById('c1'),c2=document.getElementById('c2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c1.style.left=mx+'px';c1.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;c2.style.left=rx+'px';c2.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.pcard,.tl-card,.skill-block,.lang-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+/* ═══ PAGES ═══ */
+let curPage=0;
+const pages=['p0','p1','p2','p3','p4'];
+const navLinks=document.querySelectorAll('.nav-link');
+const pdots=document.querySelectorAll('.pdot');
+
+function goPage(n){
+  document.getElementById(pages[curPage]).classList.remove('active');
+  navLinks[curPage].classList.remove('on');
+  pdots[curPage].classList.remove('on');
+  curPage=n;
+  document.getElementById(pages[n]).classList.add('active');
+  navLinks[n].classList.add('on');
+  pdots[n].classList.add('on');
+  window.scrollTo(0,0);
+  // Trigger page-specific animations
+  if(n===1) setTimeout(()=>{triggerSkills();drawSkillCanvas();},300);
+  if(n===2) setTimeout(triggerTimeline,200);
+}
+
+/* ═══ LANGUAGE ═══ */
+let lang='en';
+function setLang(l){
+  lang=l;
+  document.getElementById('lb-en').classList.toggle('on',l==='en');
+  document.getElementById('lb-de').classList.toggle('on',l==='de');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const t=el.getAttribute('data-'+l);
+    if(t==null)return;
+    // Check if contains HTML tags
+    if(t.includes('<'))el.innerHTML=t;
+    else el.textContent=t;
+  });
+  document.querySelectorAll('[data-placeholder-en]').forEach(el=>{
+    el.placeholder=el.getAttribute('data-placeholder-'+l)||'';
+  });
+  // Update greeting bubble
+  const bubble=document.querySelector('.msgs .cbubble');
+  if(bubble){const t=bubble.getAttribute('data-'+l);if(t)bubble.textContent=t;}
+}
+
+/* ═══ SKILL BLOCKS TRIGGER ═══ */
+function triggerSkills(){
+  document.querySelectorAll('.sb-level-fill').forEach(b=>b.classList.add('go'));
+}
+
+/* ═══ TIMELINE ANIMATION ═══ */
+function triggerTimeline(){
+  document.querySelectorAll('.tl-item').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('on'),i*120);
+  });
+}
+
+/* ═══ SKILL HEX CANVAS ═══ */
+function drawSkillCanvas(){
+  const canvas=document.getElementById('skill-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const skills=[
+    {label:'Sciforma',val:.95},{label:'Agile/Scrum',val:.88},
+    {label:'JIRA',val:.90},{label:'Power BI',val:.85},
+    {label:'SAP',val:.78},{label:'ServiceNow',val:.75},
+    {label:'Governance',val:.92},{label:'Zoho',val:.82},
+  ];
+  const n=skills.length;
+  const cx=W/2,cy=H/2,R=130,rInner=30;
+  const angleStep=(Math.PI*2)/n;
+
+  // Draw web rings
+  for(let ring=1;ring<=5;ring++){
+    const r=rInner+(R-rInner)*(ring/5);
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const a=i*angleStep-Math.PI/2;
+      const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle=`rgba(0,255,136,${.06+ring*.03})`;
+    ctx.lineWidth=.5;ctx.stroke();
+  }
+  // Spokes
+  for(let i=0;i<n;i++){
+    const a=i*angleStep-Math.PI/2;
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
+    ctx.strokeStyle='rgba(0,255,136,.1)';ctx.lineWidth=.5;ctx.stroke();
+  }
+  // Skill polygon (animated)
+  let prog=0;
+  function animPoly(){
+    prog=Math.min(prog+.04,1);
+    ctx.clearRect(0,0,W,H);
+    // Re-draw rings
+    for(let ring=1;ring<=5;ring++){
+      const r=rInner+(R-rInner)*(ring/5);
+      ctx.beginPath();
+      for(let i=0;i<n;i++){const a=i*angleStep-Math.PI/2;const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.closePath();ctx.strokeStyle=`rgba(0,255,136,${.06+ring*.03})`;ctx.lineWidth=.5;ctx.stroke();
+    }
+    for(let i=0;i<n;i++){const a=i*angleStep-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.strokeStyle='rgba(0,255,136,.1)';ctx.lineWidth=.5;ctx.stroke();}
+    // Polygon fill
+    ctx.beginPath();
+    skills.forEach((s,i)=>{
+      const a=i*angleStep-Math.PI/2;
+      const r=rInner+(R-rInner)*s.val*prog;
+      const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.closePath();
+    const grd=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+    grd.addColorStop(0,'rgba(0,255,136,.25)');grd.addColorStop(1,'rgba(0,255,136,.05)');
+    ctx.fillStyle=grd;ctx.fill();
+    ctx.strokeStyle='rgba(0,255,136,.8)';ctx.lineWidth=2;ctx.stroke();
+    // Dots + labels
+    skills.forEach((s,i)=>{
+      const a=i*angleStep-Math.PI/2;
+      const r=rInner+(R-rInner)*s.val*prog;
+      const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
+      ctx.fillStyle='var(--green)';ctx.fill();
+      // Label
+      const lx=cx+(R+22)*Math.cos(a),ly=cy+(R+22)*Math.sin(a);
+      ctx.font='600 11px Outfit,sans-serif';
+      ctx.fillStyle='rgba(245,245,245,.85)';
+      ctx.textAlign=Math.cos(a)>0.1?'left':Math.cos(a)<-0.1?'right':'center';
+      ctx.textBaseline=Math.sin(a)>0.2?'top':Math.sin(a)<-0.2?'bottom':'middle';
+      ctx.fillText(s.label,lx,ly);
+    });
+    if(prog<1)requestAnimationFrame(animPoly);
+  }
+  animPoly();
+}
+
+/* ═══ AI CHAT ═══ */
+const SYSTEM=`You are the personal AI assistant for Prakash Kumar's portfolio. Answer questions from recruiters and hiring managers about Prakash. Also help users book a meeting through natural conversation — collect meeting type, date, time, their name and email, then confirm warmly. Respond in the user's language (English or German). Be concise and professional. Max 4 sentences unless booking.
+
+PRAKASH KUMAR — FULL PROFILE:
+Role: PPM Consultant / Software Engineer — Digital Transformation
+Location: Luxembourg / Germany | Email: prakashjsr13@gmail.com | LinkedIn: linkedin.com/in/prakashjsr
+
+CURRENT: Software Engineer at Tech Mahindra (Client: POST Luxembourg), Feb 2026–Present. Managing Sciforma PPM platform, SAP/ServiceNow/Sciforma integrations, governance (phases, gates, baselines, dashboards), incident resolution, vendor coordination, training for project/resource managers.
+
+ALSO CURRENT: Stock Coordinator at PVH Brands Germany GmbH (Jun 2025–Present).
+
+PREVIOUS: Working Student PM at Korian Deutschland (Jun 2024–Mar 2025) — healthcare IT projects, governance reporting. Working Student Project Engineer at Metriklab (Mar 2023–Feb 2024) — led Zoho CRM + Projects implementation, Agile ceremonies, KPI dashboards. Associate Analyst at Lowe's India (Jun–Oct 2022). Project Coordinator at IQVIA RDS India (Aug 2021–Jun 2022) — healthcare compliance.
+
+EDUCATION: Master Design Leadership, THI Ingolstadt, GPA 1.9. Master thesis on Sciforma implementation, grade 1.7. Diploma Mechanical Engineering.
+
+SKILLS: Sciforma (expert), SAP, ServiceNow, Power BI, JIRA, Confluence, Agile, Scrum, Zoho Projects, Advanced Excel, Project Governance, KPI Reporting, Change Management.
+Languages: English (fluent), German (B1), Hindi (native).
+
+BOOKING: When user wants to book — ask: (1) meeting type (coffee chat 20min / intro call 30min / detailed interview 45min), (2) preferred date, (3) preferred time, (4) their name, (5) their email. Then confirm enthusiastically saying Prakash will send a calendar invite shortly.`;
+
+let history=[],loading=false;
+function ts(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function addMsg(role,text){
+  const c=document.getElementById('msgs');
+  const d=document.createElement('div');d.className=`cmsg ${role}`;
+  d.innerHTML=`<div class="cav">${role==='ai'?'PK':'You'}</div><div><div class="cbubble">${text.replace(/\n/g,'<br>')}</div><div class="ctime">${ts()}</div></div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function showTyping(){
+  const c=document.getElementById('msgs');
+  const d=document.createElement('div');d.id='typing';d.className='cmsg ai';
+  d.innerHTML=`<div class="cav">PK</div><div><div class="cbubble"><div class="typing-wrap"><span></span><span></span><span></span></div></div></div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function hideTyping(){const t=document.getElementById('typing');if(t)t.remove();}
+async function sendMsg(){
+  const inp=document.getElementById('ci'),btn=document.getElementById('cs');
+  const text=inp.value.trim();if(!text||loading)return;
+  inp.value='';loading=true;btn.disabled=true;
+  document.getElementById('qr-wrap').style.display='none';
+  addMsg('user',text);history.push({role:'user',content:text});
+  showTyping();
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM,messages:history})});
+    const data=await r.json();hideTyping();
+    const reply=data.content?.[0]?.text||"I couldn't respond right now. Please try again.";
+    history.push({role:'assistant',content:reply});addMsg('ai',reply);
+  }catch{hideTyping();addMsg('ai','Connection issue — please try again.');}
+  loading=false;btn.disabled=false;
+}
+function useQR(btn){document.getElementById('ci').value=btn.textContent.trim();sendMsg();}
+document.getElementById('ci').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
+</script>
+</body>
+</html>
